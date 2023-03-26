@@ -1,0 +1,63 @@
+version: '3'
+services:
+  drillbit1:
+    image: apache/drill:1.19.0
+    container_name: drillbit1
+    ports:
+      - "8047:8047"
+    environment:
+      - DRILL_CLUSTER_ID=drillbits
+      - DRILL_ZK_CONNECT=zookeeper1:2181,zookeeper2:2181,zookeeper3:2181
+      - DRILL_HEAP=4G
+    networks:
+      - drill-net
+  drillbit2:
+    image: apache/drill:1.19.0
+    container_name: drillbit2
+    environment:
+      - DRILL_CLUSTER_ID=drillbits
+      - DRILL_ZK_CONNECT=zookeeper1:2181,zookeeper2:2181,zookeeper3:2181
+      - DRILL_HEAP=4G
+    networks:
+      - drill-net
+  drillbit3:
+    image: apache/drill:1.19.0
+    container_name: drillbit3
+    environment:
+      - DRILL_CLUSTER_ID=drillbits
+      - DRILL_ZK_CONNECT=zookeeper1:2181,zookeeper2:2181,zookeeper3:2181
+      - DRILL_HEAP=4G
+    networks:
+      - drill-net
+  zookeeper1:
+    image: zookeeper:3.5
+    container_name: zookeeper1
+    environment:
+      - ZOO_MY_ID=1
+      - ZOO_SERVERS=server.1=zookeeper1:2888:3888 server.2=zookeeper2:2888:3888 server.3=zookeeper3:2888:3888
+    ports:
+      - "2181:2181"
+      - "2888:2888"
+      - "3888:3888"
+    networks:
+      - drill-net
+  zookeeper2:
+    image: zookeeper:3.5
+    container_name: zookeeper2
+    environment:
+      - ZOO_MY_ID=2
+      - ZOO_SERVERS=server.1=zookeeper1:2888:3888 server.2=zookeeper2:2888:3888 server.3=zookeeper3:2888:3888
+    networks:
+      - drill-net
+  zookeeper3:
+    image: zookeeper:3.5
+    container_name: zookeeper3
+    environment:
+      - ZOO_MY_ID=3
+      - ZOO_SERVERS=server.1=zookeeper1:2888:3888 server.2=zookeeper2:2888:3888 server.3=zookeeper3:2888:3888
+    networks:
+      - drill-net
+networks:
+  drill-net:
+    driver: bridge
+ 
